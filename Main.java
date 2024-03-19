@@ -24,6 +24,13 @@ public class Main {
         String silksong = inputCheck(userMode);
     }
     
+    public static void scoreIncrement(String user){
+
+    scores.set(users.indexOf(user), (scores.get(users.indexOf(user)) + 1));
+    sortFile();
+    }
+
+
     public static String inputCheck(String mode) {
         
         Scanner s = new Scanner(System.in);
@@ -67,13 +74,13 @@ public class Main {
                     
                     if (!nameAlreadyExists) {
                         users.add(inputtedValue);
-                        scores.add(20);
+                        scores.add(0);
                     }
 
                     if (emptyUserFile) {
-                        fileWriter.print("20 " + inputtedValue);
+                        fileWriter.print("0 " + inputtedValue.toLowerCase());
                     } else {
-                        fileWriter.print("\n" + "20 " + inputtedValue);
+                        fileWriter.print("\n" + "0 " + inputtedValue.toLowerCase());
                     }
                 }
 
@@ -85,7 +92,6 @@ public class Main {
                 if (fileWriter != null) {
                     fileWriter.close();
                     
-
                     sortFile();
                 }
             }
