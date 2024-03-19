@@ -28,10 +28,55 @@ Tic-Tac-Toe is a classic logic game familiar to most of us. Players take turns p
 
 **Here is an example of what a run of the program might looks like:**
 
-`   1. Start  2. How to Play  3. High Scores  Please enter your choice: 1  Player 1, enter your username: John  Player 2, enter your username: Alice  It's John's turn! (X)  Choose a position (1-9): 5  +---+---+---+  |   |   |   |   +---+---+---+  |   | X |   |  +---+---+---+  |   |   |   |  +---+---+---+  It's Alice's turn! (O)  Choose a position (1-7, 8, and 9 are occupied): 2  +---+---+---+  |   | O |   |   +---+---+---+  |   | X |   |  +---+---+---+  |   |   |   |  +---+---+---+   `
+```java
+1. Start
+2. How to Play
+3. High Scores
+ 
+Please enter your choice: 1
+ 
+Player 1, enter your username: John
+Player 2, enter your username: Alice
+ 
+It's John's turn! (X)
+Choose a position (1-9): 5
+ 
++---+---+---+
+|   |   |   | 
++---+---+---+
+|   | X |   |
++---+---+---+
+|   |   |   |
++---+---+---+
+ 
+It's Alice's turn! (O)
+Choose a position (1-7, 8, and 9 are occupied): 2
+ 
++---+---+---+
+|   | O |   | 
++---+---+---+
+|   | X |   |
++---+---+---+
+|   |   |   |
++---+---+---+
+```
 
 **(Game continues...)**
 
-`   +---+---+---+  | O | O | X |   +---+---+---+  |   | X |   |  +---+---+---+  | X |   |   |  +---+---+---+  Game Over! John wins!  Play again? (y/n): n  Thank you for playing!   `
+```java
++---+---+---+
+| O | O | X | 
++---+---+---+
+|   | X |   |
++---+---+---+
+| X |   |   |
++---+---+---+
+ 
+Game Over! John wins!
+ 
+Play again? (y/n): n
+ 
+Thank you for playing!
+```
 
 **Good luck!**
