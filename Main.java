@@ -38,7 +38,7 @@ public class Main {
             
             inputtedValue = s.nextLine();
             s.close();
-            String name = "";
+            String userName = "";
             int wins = 0;
 
             try {
@@ -50,24 +50,30 @@ public class Main {
                 
                 while (fileScanner.hasNext()) {
                     wins = fileScanner.nextInt();
-                    name = (fileScanner.nextLine()).strip();
+                    userName = (fileScanner.nextLine()).strip();
                  
                     if (!nameAlreadyExists){
-                    nameAlreadyExists = (inputtedValue.equals(name));
+                    nameAlreadyExists = (inputtedValue.equals(userName));
                 }
 
 
-                    users.add(name);
+                    users.add(userName);
                     scores.add(wins);
                     // userScores.add(wins + " " + name);
                     
                 }
 
                 if (!nameAlreadyExists){
+                    
+                    if (!nameAlreadyExists) {
+                        users.add(inputtedValue);
+                        scores.add(20);
+                    }
+
                     if (emptyUserFile) {
-                        fileWriter.print("0 " + inputtedValue);
+                        fileWriter.print("20 " + inputtedValue);
                     } else {
-                        fileWriter.print("\n" + "0 " + inputtedValue);
+                        fileWriter.print("\n" + "20 " + inputtedValue);
                     }
                 }
 
@@ -79,10 +85,6 @@ public class Main {
                 if (fileWriter != null) {
                     fileWriter.close();
                     
-                    if (!nameAlreadyExists) {
-                        users.add(name);
-                        scores.add(0);
-                    }
 
                     sortFile();
                 }
@@ -100,18 +102,19 @@ public class Main {
     public static void sortFile(){
         PrintWriter fileWriter = null;
         String sortedUserScores = "";
+        String tempUser;
+        int tempScore;
 
-        // // https://stackoverflow.com/a/48502066/13160295
-        // // comparator from ^
-        // Collections.sort(userScores, new Comparator<String>() {
-        //     public int compare(String a, String b) {
-        //         int n1 = Integer.parseInt(a.split(" ")[0]);
-        //         int n2 = Integer.parseInt(b.split(" ")[0]);
-
-        //         return n2 - n1;
-        //     } 
-        // });
-        
+        for (int i = (scores.size() - 1); i > 0 && scores.get(i) > scores.get(i-1); i--) {
+                tempScore = scores.get(i-1);
+                scores.set(i-1, scores.get(i));
+                scores.set(i, tempScore);
+            
+                tempUser = users.get(i-1);
+                users.set(i-1, users.get(i));
+                users.set(i, tempUser);
+        }
+     
         for (int i = 0; i < scores.size(); i++){    
             sortedUserScores += (scores.get(i) + " " + users.get(i));
             if (i < (scores.size() - 1)) {
