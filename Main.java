@@ -18,12 +18,28 @@ public class Main {
     static ArrayList<Integer> scores = new ArrayList<Integer>();
     static boolean nameAlreadyExists = false;
     static String userMode = "userMode";
+    static String menuMode = "menuMode";
     static String moveMode = "moveMode";
+    static boolean playAgain = true;
 
     public static void main(String[] args) {
-        String silksong = inputCheck(userMode);
+        
+        Scanner s = new Scanner(System.in);
+
+        while (playAgain) {
+            menu(s);
+        }
+
+        s.close();
+        
+        String silksong = inputCheck(s, userMode);
     }
     
+    public static void menu(Scanner s) { 
+
+
+    }
+
     public static void scoreIncrement(String user){
 
     scores.set(users.indexOf(user), (scores.get(users.indexOf(user)) + 1));
@@ -31,9 +47,7 @@ public class Main {
     }
 
 
-    public static String inputCheck(String mode) {
-        
-        Scanner s = new Scanner(System.in);
+    public static String inputCheck(Scanner s, String mode) {
         Scanner fileScanner = null;
         PrintWriter fileWriter = null;
 
@@ -44,7 +58,6 @@ public class Main {
         if (mode.equals(userMode)) {
             
             inputtedValue = s.nextLine();
-            s.close();
             String userName = "";
             int wins = 0;
 
@@ -96,11 +109,9 @@ public class Main {
                 }
             }
             
-            s.close();
             return inputtedValue;
         }
         
-        s.close();
         return inputtedValue;
         
     }
@@ -141,5 +152,27 @@ public class Main {
         }
 
         }
+
+
+    public final static void clearConsole()
+    {
+        try
+        {
+            final String os = System.getProperty("os.name");
+            
+            if (os.contains("Windows"))
+            {
+                Runtime.getRuntime().exec("cls");
+            }
+            else
+            {
+                Runtime.getRuntime().exec("clear");
+            }
+        }
+        catch (final Exception e)
+        {
+            //  Handle any exceptions.
+        }
     }
+}
 
