@@ -25,6 +25,7 @@ public class Main {
     public static void main(String[] args) {
         
         Scanner s = new Scanner(System.in);
+        String silksong = inputCheck(s, userMode);
 
         while (playAgain) {
             menu(s);
@@ -32,16 +33,17 @@ public class Main {
 
         s.close();
         
-        String silksong = inputCheck(s, userMode);
     }
     
     public static void menu(Scanner s) { 
-
+        
+        System.out.println("⋆ Main Menu ⋆\n1. Play\n2. How To Play\n3. Leaderboard");
+        
+        inputCheck(s, menuMode);
 
     }
 
     public static void scoreIncrement(String user){
-
     scores.set(users.indexOf(user), (scores.get(users.indexOf(user)) + 1));
     sortFile();
     }
@@ -91,9 +93,9 @@ public class Main {
                     }
 
                     if (emptyUserFile) {
-                        fileWriter.print("0 " + inputtedValue.toLowerCase());
+                        fileWriter.print("0 " + inputtedValue);
                     } else {
-                        fileWriter.print("\n" + "0 " + inputtedValue.toLowerCase());
+                        fileWriter.print("\n" + "0 " + inputtedValue);
                     }
                 }
 
@@ -110,6 +112,21 @@ public class Main {
             }
             
             return inputtedValue;
+        }
+
+        if (mode.equals(menuMode)) {
+
+            int choice = -1;
+
+            while (!(choice >= 1 && choice <= 3)) {
+                try {
+                    choice = s.nextInt();
+                } catch (Exception e) {
+                    choice = -1;
+                    System.out.println("Selection: ");
+                }
+            }
+
         }
         
         return inputtedValue;
