@@ -8,21 +8,20 @@ Date Last Modified: March 11, 2024
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 
 public class Main {
     
     static boolean emptyUserFile = false;
     static String userList = "users.txt";
-    static ArrayList<String> userScores = new ArrayList<String>();
+    static ArrayList<String> users = new ArrayList<String>();
+    static ArrayList<Integer> scores = new ArrayList<Integer>();
     static boolean nameAlreadyExists = false;
     static String userMode = "userMode";
     static String moveMode = "moveMode";
 
     public static void main(String[] args) {
-        String asdf = inputCheck(userMode);
+        String silksong = inputCheck(userMode);
     }
     
     public static String inputCheck(String mode) {
@@ -57,7 +56,10 @@ public class Main {
                     nameAlreadyExists = (inputtedValue.equals(name));
                 }
 
-                    userScores.add(wins + " " + name);
+
+                    users.add(name);
+                    scores.add(wins);
+                    // userScores.add(wins + " " + name);
                     
                 }
 
@@ -78,7 +80,8 @@ public class Main {
                     fileWriter.close();
                     
                     if (!nameAlreadyExists) {
-                        userScores.add("0 " + inputtedValue);
+                        users.add(name);
+                        scores.add(0);
                     }
 
                     sortFile();
@@ -98,20 +101,20 @@ public class Main {
         PrintWriter fileWriter = null;
         String sortedUserScores = "";
 
-        // https://stackoverflow.com/a/48502066/13160295
-        // comparator from ^
-        Collections.sort(userScores, new Comparator<String>() {
-            public int compare(String a, String b) {
-                int n1 = Integer.parseInt(a.split(" ")[0]);
-                int n2 = Integer.parseInt(b.split(" ")[0]);
+        // // https://stackoverflow.com/a/48502066/13160295
+        // // comparator from ^
+        // Collections.sort(userScores, new Comparator<String>() {
+        //     public int compare(String a, String b) {
+        //         int n1 = Integer.parseInt(a.split(" ")[0]);
+        //         int n2 = Integer.parseInt(b.split(" ")[0]);
 
-                return n2 - n1;
-            } 
-        });
+        //         return n2 - n1;
+        //     } 
+        // });
         
-        for (int i = 0; i < userScores.size(); i++){
-            sortedUserScores += (userScores.get(i));
-            if (i < (userScores.size() - 1)) {
+        for (int i = 0; i < scores.size(); i++){    
+            sortedUserScores += (scores.get(i) + " " + users.get(i));
+            if (i < (scores.size() - 1)) {
                 sortedUserScores += "\n";
             }
         }
