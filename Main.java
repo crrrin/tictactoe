@@ -1,6 +1,6 @@
 /*
 Problem Set Unit 1 (Tic-Tac-Toe)
-Author: Dhanish Azam
+Author: ._.
 Date Created: March 11, 2024
 Date Last Modified: March 11, 2024
 */
