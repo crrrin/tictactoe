@@ -8,6 +8,7 @@ Date Last Modified: March 11, 2024
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.random.*;
 
 
 public class Main {
@@ -22,6 +23,14 @@ public class Main {
     public static String moveMode = "moveMode";
     public static boolean playAgain = true;
     public static boolean winyet = false;
+    public static int numCurrentUser = 1;
+
+    public static String user1;
+    public static String user2;
+
+    public static String xUser;
+    public static String oUser;
+    
     public static String gameBoard[][] = {
         {"1", "2", "3"},
         {"4", "5", "6"},
@@ -49,6 +58,7 @@ public class Main {
         int choice = Integer.parseInt(inputCheck(s, menuMode));
 
         if (choice == 1) {
+            numCurrentUser = 1;
             game(s);
         } else if (choice == 2) {
             instructions();
@@ -65,19 +75,27 @@ public class Main {
 
     public static void game(Scanner s) {
         // TODO Auto-generated method stub
-        printBoard();
 
         int moves = 0;
+        
+        user1 = inputCheck(s, userMode);
 
+        numCurrentUser += 1;
+
+        user2 = inputCheck(s, userMode);
+
+        printBoard();
 
         inputCheck(s, moveMode);
 
-        while (moves < 9 && !winyet){
-
-            if 
 
 
-        }
+        // while (moves < 9 && !winyet){
+
+        //     for (int i = )
+
+
+        // }
 
 
 
@@ -120,7 +138,16 @@ public class Main {
         // for if the function is called to get player names...
         if (mode.equals(userMode)) {
             
+            System.out.print("Choose a username for Player " + numCurrentUser + ": ");
             inputtedValue = s.nextLine();
+
+            while ((numCurrentUser == 2) && inputtedValue.equals(user1)) {
+
+            System.out.print("User taken by Player 1! Choose a different username for Player " + numCurrentUser + ": ");
+            inputtedValue = s.nextLine();
+
+            }
+
             String userName = "";
             int wins = 0;
 
@@ -183,6 +210,7 @@ public class Main {
                 try {
                     System.out.print("Input a number from 1-3: ");
                     choice = s.nextInt();
+                    s.nextLine();
                     if (!(choice >= 1 && choice <= 3)) throw new Exception("💩");
                 } catch (Exception e) {
                     choice = -1;
