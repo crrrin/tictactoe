@@ -12,16 +12,17 @@ import java.util.ArrayList;
 
 public class Main {
     
-    static boolean emptyUserFile = false;
-    static String userList = "users.txt";
-    static ArrayList<String> users = new ArrayList<String>();
-    static ArrayList<Integer> scores = new ArrayList<Integer>();
-    static boolean nameAlreadyExists = false;
-    static String userMode = "userMode";
-    static String menuMode = "menuMode";
-    static String moveMode = "moveMode";
-    static boolean playAgain = true;
-    static String gameBoard[][] = {
+    public static boolean emptyUserFile = false;
+    public static String userList = "users.txt";
+    public static ArrayList<String> users = new ArrayList<String>();
+    public static ArrayList<Integer> scores = new ArrayList<Integer>();
+    public static boolean nameAlreadyExists = false;
+    public static String userMode = "userMode";
+    public static String menuMode = "menuMode";
+    public static String moveMode = "moveMode";
+    public static boolean playAgain = true;
+    public static boolean winyet = false;
+    public static String gameBoard[][] = {
         {"1", "2", "3"},
         {"4", "5", "6"},
         {"7", "8", "9"}
@@ -31,11 +32,11 @@ public class Main {
         
         Scanner s = new Scanner(System.in);
         
-        String silksong = inputCheck(s, userMode);
-        // while (playAgain) {
+        while (playAgain) {
             menu(s);
-            // }
-            
+        }
+        
+        String silksong = inputCheck(s, userMode);
         s.close();
         
     }
@@ -48,7 +49,7 @@ public class Main {
         int choice = Integer.parseInt(inputCheck(s, menuMode));
 
         if (choice == 1) {
-            game();
+            game(s);
         } else if (choice == 2) {
             instructions();
         } else {
@@ -62,9 +63,24 @@ public class Main {
         throw new UnsupportedOperationException("Unimplemented method 'leaderboard'");
     }
 
-    public static void game() {
+    public static void game(Scanner s) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'game'");
+        printBoard();
+
+        int moves = 0;
+
+
+        inputCheck(s, moveMode);
+
+        while (moves < 9 && !winyet){
+
+            if 
+
+
+        }
+
+
+
     }
 
     public static void scoreIncrement(String user){
@@ -185,22 +201,28 @@ public class Main {
 
             int choice = -1;
 
-            try {
+            while (!(choice >= 1 && choice <= 9))
+
+            {
+                try {
                 System.out.print("Select an available grid space from 1-9: ");
                 choice = s.nextInt();
                 if (!(choice >= 1 && choice <= 9)
                     || gameBoard[(choice-1)/3][(choice-1)%3] == "X"
                     || gameBoard[(choice-1)/3][(choice-1)%3] == "O") 
                         throw new Exception("💩");
+                        // TODO make this exception descriptive
             
-            } catch (Exception e) {
-                choice = -1;
-                s.nextLine();
-                clearConsole();
-                printBoard();
+                    return Integer.toString(choice);
 
+                } catch (Exception e) {
+                    choice = -1;
+                    s.nextLine();
+                    clearConsole();
+                    printBoard();
+
+                }
             }
-
         }
         
         return inputtedValue;
