@@ -76,27 +76,28 @@ public class Main {
     public static void game(Scanner s) {
         // TODO Auto-generated method stub
 
-        int moves = 0;
-        
-        user1 = inputCheck(s, userMode);
+        while (playAgain) {
+            int moves = 0;
+            
+            user1 = inputCheck(s, userMode);
 
-        numCurrentUser += 1;
+            numCurrentUser += 1;
 
-        user2 = inputCheck(s, userMode);
+            user2 = inputCheck(s, userMode);
 
-        printBoard();
+            printBoard();
 
-        inputCheck(s, moveMode);
-
-
-
-        // while (moves < 9 && !winyet){
-
-        //     for (int i = )
+            inputCheck(s, moveMode);
 
 
-        // }
 
+            // while (moves < 9 && !winyet){
+
+            //     for (int i = )
+
+
+            // }
+        }
 
 
     }
@@ -160,12 +161,14 @@ public class Main {
                 
                 while ((fileScanner.hasNext()) && numCurrentUser == 1) {
                     wins = fileScanner.nextInt();
-                    userName = (fileScanner.nextLine()).strip();
+                    
+                    while (userName.equals("")) {
+                        userName = (fileScanner.nextLine()).strip();
                  
+                    }
                     if (!nameAlreadyExists){
-                    nameAlreadyExists = (inputtedValue.equals(userName));
-                }
-
+                    nameAlreadyExists = (inputtedValue.equals(userName));}
+                    
                     users.add(userName);
                     scores.add(wins);
                     // userScores.add(wins + " " + name);
