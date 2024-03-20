@@ -123,7 +123,6 @@ public class Main {
                     nameAlreadyExists = (inputtedValue.equals(userName));
                 }
 
-
                     users.add(userName);
                     scores.add(wins);
                     // userScores.add(wins + " " + name);
