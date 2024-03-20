@@ -158,7 +158,7 @@ public class Main {
                 emptyUserFile = !(fileScanner.hasNext());
 
                 
-                while (fileScanner.hasNext()) {
+                while ((fileScanner.hasNext()) && numCurrentUser == 1) {
                     wins = fileScanner.nextInt();
                     userName = (fileScanner.nextLine()).strip();
                  
@@ -170,7 +170,7 @@ public class Main {
                     scores.add(wins);
                     // userScores.add(wins + " " + name);
                     
-                }
+                } 
 
                 if (!nameAlreadyExists){
                     
