@@ -21,16 +21,21 @@ public class Main {
     static String menuMode = "menuMode";
     static String moveMode = "moveMode";
     static boolean playAgain = true;
+    static String gameBoard[][] = {
+        {"1", "2", "3"},
+        {"4", "5", "6"},
+        {"7", "8", "9"}
+    };
 
     public static void main(String[] args) {
         
         Scanner s = new Scanner(System.in);
+        
         String silksong = inputCheck(s, userMode);
-
-        menu(s);
         // while (playAgain) {
-        // }
-
+            menu(s);
+            // }
+            
         s.close();
         
     }
@@ -40,13 +45,52 @@ public class Main {
         clearConsole();
         System.out.println("★ Main Menu ★\n1. Play\n2. How To Play\n3. Leaderboard");
 
-        inputCheck(s, menuMode);
+        int choice = Integer.parseInt(inputCheck(s, menuMode));
 
+        if (choice == 1) {
+            game();
+        } else if (choice == 2) {
+            instructions();
+        } else {
+            leaderboard();
+        }
+
+    }
+
+    public static void leaderboard() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'leaderboard'");
+    }
+
+    public static void game() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'game'");
     }
 
     public static void scoreIncrement(String user){
     scores.set(users.indexOf(user), (scores.get(users.indexOf(user)) + 1));
     sortFile();
+    }
+
+    public static void printBoard() {
+        System.out.println(
+            "+-~-+-~-+-~-+\n" +
+            "| " + gameBoard[0][0] + " | " + gameBoard[0][1] + " | " + gameBoard[0][2] + " |\n" +
+            "+-~-+-~-+-~-+\n" +
+            "| " + gameBoard[1][0] + " | " + gameBoard[1][1] + " | " + gameBoard[1][2] + " |\n" +
+            "+-~-+-~-+-~-+\n" +
+            "| " + gameBoard[2][0] + " | " + gameBoard[2][1] + " | " + gameBoard[2][2] + " |\n" +
+            "+-~-+-~-+-~-+");
+    }
+
+    public static void instructions() {
+        clearConsole();
+        System.out.println("Compete against a friend (or yourself) in order to get three X's or O's in a row!");
+        System.out.println("Whoever is first to get three of their symbol, be it an X or an O, in a row, column, or diagonal wins!");
+        System.out.println("When prompted to move, select the number on the grid, from 1-9, at the location that you wish to play.");
+        System.out.println("If said move is possible, the move will be completed.");
+        System.out.println("If said move is NOT possible, you will be prompted to make a valid move.");
+
     }
 
 
@@ -124,7 +168,7 @@ public class Main {
                 try {
                     System.out.print("Input a number from 1-3: ");
                     choice = s.nextInt();
-                    if (!(choice >= 1 && choice <= 3)) throw new Exception("💩💩💩💩");
+                    if (!(choice >= 1 && choice <= 3)) throw new Exception("💩");
                 } catch (Exception e) {
                     choice = -1;
                     s.nextLine();
@@ -135,6 +179,28 @@ public class Main {
             }
 
             return Integer.toString(choice);
+
+        }
+
+        if (mode.equals(moveMode)){
+
+            int choice = -1;
+
+            try {
+                System.out.print("Select an available grid space from 1-9: ");
+                choice = s.nextInt();
+                if (!(choice >= 1 && choice <= 9)
+                    || gameBoard[(choice-1)/3][(choice-1)%3] == "X"
+                    || gameBoard[(choice-1)/3][(choice-1)%3] == "O") 
+                        throw new Exception("💩");
+            
+            } catch (Exception e) {
+                choice = -1;
+                s.nextLine();
+                clearConsole();
+                printBoard();
+
+            }
 
         }
         
