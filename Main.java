@@ -155,7 +155,7 @@ public class Main {
 
     public static void resetUsersCheck(Scanner s) {
         if (inputCheck(s, resetUsersMode).equals("n")){
-            resetUsers = true;
+            resetUsers = false;
         }
     }
 
@@ -216,7 +216,7 @@ public class Main {
         users.remove(index);
 
         scores.add(tempScore + 1);
-        users.add(index, tempUser);
+        users.add(tempUser);
 
         sortFile();
     }
@@ -319,7 +319,7 @@ public class Main {
                 if (fileWriter != null) {
                     fileWriter.close();
                     
-                    sortFile();
+                    // sortFile();
                 }
                 
             }

@@ -7,9 +7,10 @@
 5 me
 1 friend
 1 testt
+1 test2
+1 2
 0 asdfffff
 0 happy poopee
 0 test1
-0 test2
 0 testttt
 0 aklsdjfsadfs
