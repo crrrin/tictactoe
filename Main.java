@@ -104,6 +104,7 @@ public class Main {
 
         if (scores.size() == 0) {
             System.out.println("No highscores have been logged- Play a round to see your highscore listed here!");
+            System.out.println("Hit enter to return to the main menu.");
             s.nextLine();
             return;
         }
@@ -129,7 +130,8 @@ public class Main {
             } catch (Exception e) {}
             
         }
-        
+        System.out.println("\nHit enter to return to the main menu.");
+
         s.nextLine();
         
     }
