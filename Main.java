@@ -13,11 +13,16 @@ import java.util.Random;
 
 public class Main {
     
-    public static boolean firstRun = true;
+    public static boolean firstRun = true; //bool to ensure arraylists for user/score are only pulled from file once
     
-    public static String userList = "users.txt";
-    public static ArrayList<String> users = new ArrayList<String>();
+    
+    public static String userList = "users.txt"; // file of scores/names
+    
+    // parallel arraylists of users/scores 
+    public static ArrayList<String> users = new ArrayList<String>(); 
     public static ArrayList<Integer> scores = new ArrayList<Integer>();
+
+    // 
     public static boolean emptyUserFile = false;
     public static boolean nameAlreadyExists = false;
     
@@ -58,8 +63,7 @@ public class Main {
             menu(s);
         }
         
-        s.close();
-        
+        s.close();        
     }
     
     public static void refreshBoard(){
@@ -356,14 +360,14 @@ public class Main {
                 inputtedValue = s.nextLine();
             }
 
-            while ((numCurrentUser == 2) && inputtedValue.equals(user1)) {
+            while ((numCurrentUser == 2) && (inputtedValue.strip()).equals(user1.strip())) {
 
             System.out.print("User taken by Player 1! Choose a different username for Player " + numCurrentUser + ": ");
             inputtedValue = s.nextLine();
 
             }
             
-            nameAlreadyExists = users.contains(inputtedValue);
+            nameAlreadyExists = users.contains(inputtedValue.strip());
             
             if (!nameAlreadyExists){
                 
