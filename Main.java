@@ -46,7 +46,7 @@ public class Main {
         {"1", "2", "3"},
         {"4", "5", "6"},
         {"7", "8", "9"}
-    };
+    }; 
 
     public static void main(String[] args) {
         
@@ -63,7 +63,7 @@ public class Main {
     public static void menu(Scanner s) { 
         
         clearConsole();
-        System.out.println("★ Main Menu ★\n1. Play\n2. How To Play\n3. Leaderboard");
+        System.out.println("~ Main Menu ~\n1. Play\n2. How To Play\n3. Leaderboard");
 
         int choice = Integer.parseInt(inputCheck(s, menuMode));
 
@@ -73,21 +73,22 @@ public class Main {
         } else if (choice == 2) {
             instructions(s);
         } else {
-            leaderboard();
+            leaderboard(s);
         }
 
     }
 
-    public static void leaderboard() {
-        // TODO leaderboard is pending
-        throw new UnsupportedOperationException("Unimplemented method 'leaderboard'");
+    public static void leaderboard(Scanner s) {
+
+        
+
+
     }
 
     public static void game(Scanner s) {
-        // TODO main game loop is pending
 
         while (playAgain) {
-
+            winyet = false;
             numCurrentUser = 1;
             
             if (resetUsers){
@@ -104,8 +105,6 @@ public class Main {
 
                 clearConsole();
                 printBoard();
-
-                // TODO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3
 
                 move = Integer.parseInt(inputCheck(s, moveMode));
 
@@ -342,7 +341,7 @@ public class Main {
                     choice = -1;
                     // s.nextLine();
                     clearConsole();
-                    System.out.println("★ Main Menu ★\n1. Play\n2. How To Play\n3. Leaderboard");
+                    System.out.println("~ Main Menu ~\n1. Play\n2. How To Play\n3. Leaderboard");
 
                 }
             }
@@ -368,8 +367,7 @@ public class Main {
                     if (!(choice >= 1 && choice <= 9)
                         || gameBoard[(choice-1)/3][(choice-1)%3] == "X"
                         || gameBoard[(choice-1)/3][(choice-1)%3] == "O") 
-                            throw new Exception("💩");
-                            // TODO make this exception descriptive
+                            throw new Exception("choice was not in range 1-9");
                 
                         return Integer.toString(choice);
 
