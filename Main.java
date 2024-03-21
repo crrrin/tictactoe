@@ -225,23 +225,20 @@ public class Main {
             return;
         }
         
-        // column win checking
-        for (int column = 0; column < 3; column++){
-            if (gameBoard[0][column] == gameBoard[1][column] && gameBoard[1][column] == gameBoard[2][column]){
+        for (int i = 0; i < 3; i++){
+            // column win checking
+            if (gameBoard[0][i] == gameBoard[1][i] && gameBoard[1][i] == gameBoard[2][i]){
                 winyet = true;
-                winner = gameBoard[0][column];
+                winner = gameBoard[0][i];
+                return;
+            }
+            // row win checking
+            else if (gameBoard[i][0] == gameBoard[i][1] && gameBoard[i][1] == gameBoard[i][2]){
+                winyet = true;
+                winner = gameBoard[i][0];
                 return;
             }
         }
-
-        // row win checking
-        for (int row = 0; row < 3; row++){
-            if (gameBoard[row][0] == gameBoard[row][1] && gameBoard[row][1] == gameBoard[row][2]){
-                winyet = true;
-                winner = gameBoard[row][0];
-                return;
-            }
-        }       
     }
 
     public static void randomizeFirstPlayer() {
