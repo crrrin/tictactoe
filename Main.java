@@ -8,7 +8,7 @@ Date Last Modified: March 11, 2024
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Random; 
 
 
 public class Main {
@@ -26,27 +26,34 @@ public class Main {
     public static boolean emptyUserFile = false;
     public static boolean nameAlreadyExists = false;
     
-    public static int numCurrentUser = 1;
-    public static String user1;
-    public static String user2;
-    public static boolean resetUsers = true;
-    public static int move;
-    public static int moveCount = 0;
+    public static int numCurrentUser = 1; //determines current user for assigning names
     
-    public static String xUser;
-    public static String oUser;
-    public static String winner;
+    //holds usernames
+    public static String user1; 
+    public static String user2;
 
+    public static boolean resetUsers = true; // whether or not user wants to replay at the end
+    public static int move; //stores grid space selection from current user's turn
+    public static int moveCount = 0; //stores how many turns have passed
+    
+    //holds usernames after randomization
+    public static String xUser; 
+    public static String oUser;
+
+    public static String winner; //stores winner after a winner is declared
+
+    // input check modes, mostly for convenience
     public static String userMode = "userMode";
     public static String menuMode = "menuMode";
     public static String moveMode = "moveMode";
     public static String replayMode = "replayMode";
     public static String resetUsersMode = "resetUsersMode";
     
-    public static boolean winyet = false;
+    public static boolean winyet = false; // if a win has occurred in current round yet
     
-    public static boolean playAgain = true;
+    public static boolean playAgain = true; // whether the user wants to play again
     
+    // 2d array of game board
     public static String gameBoard[][] = {
         {"1", "2", "3"},
         {"4", "5", "6"},
@@ -57,34 +64,43 @@ public class Main {
         
         Scanner s = new Scanner(System.in);
         
-        ArrayWriteFromFile();
+        ArrayWriteFromFile(); // reads file & writes to arraylists
         
-        while (playAgain) {
+        while (playAgain) { // main game loop- stop if they dont want to play again
             menu(s);
         }
         
-        s.close();        
+        s.close(); // close scanner
     }
     
+
+    // clear board (for after game)
     public static void refreshBoard(){
+
+        // iterate through each index and reassign digits 1-9
         for (int i = 1; i <= 9; i++){
-            gameBoard[(i-1)/3][(i-1)%3] = Integer.toString(i);
+            // vertical position can be obtained by the "index" divided by 3;
+            //horizontal position by the "index" mod 3
+            gameBoard[(i-1)/3][(i-1)%3] = Integer.toString(i); 
         }
     }
     
+    //
     public static void menu(Scanner s) { 
         
         clearConsole();
         System.out.println("~ Main Menu ~\n1. Play\n2. How To Play\n3. Leaderboard");
 
-        int choice = Integer.parseInt(inputCheck(s, menuMode));
+        int choice = Integer.parseInt(inputCheck(s, menuMode)); // user's choice is pulled from input function
 
+        // if they choose game, current user is 1 (to ensure that username is assigned to user 1 every reset),
+        // then go to game function
         if (choice == 1) {
             numCurrentUser = 1;
-            game(s);
-        } else if (choice == 2) {
+            game(s); 
+        } else if (choice == 2) { // if 2 go to instructions
             instructions(s);
-        } else {
+        } else { // else (if 3) go to leaderboard
             leaderboard(s);
         }
 
@@ -92,11 +108,12 @@ public class Main {
 
     public static void leaderboard(Scanner s) {
 
-        int displayScore = 1;
+        // variable for ranking (i.e., if users are tied they will all be listed as being the same rank until there is a user that is not tied)
+        int displayScore = 1; 
 
         clearConsole();
 
-        System.out.println(
+        System.out.println( // do you like my ascii art, i stole it https://patorjk.com/software/taag/
             "\n" + //
             "\n" + //
             "  _      ______          _____  ______ _____  ____   ____          _____  _____  \n" + //
@@ -106,7 +123,8 @@ public class Main {
             " | |____| |____ / ____ \\| |__| | |____| | \\ \\| |_) | |__| / ____ \\| | \\ \\| |__| |\n" + //
             " |______|______/_/    \\_\\_____/|______|_|  \\_\\____/ \\____/_/    \\_\\_|  \\_\\_____/ \n");
 
-        if (scores.size() == 0) {
+        // if users file is empty
+        if (scores.size() == 0) { 
             System.out.println("No highscores have been logged- Play a round to see your highscore listed here!");
             System.out.println("Hit enter to return to the main menu.");
             s.nextLine();
@@ -115,77 +133,80 @@ public class Main {
 
 
 
-        for (int i = 0; i < scores.size() && i < 10; i++){
+        for (int i = 0; i < scores.size() && i < 10; i++){ // go through array until reach 10 users or end of array
 
             try {
 
+                //first user will always simply be 1.
                 if (i == 0) {System.out.println(displayScore + ". " + users.get(i) + ": " + scores.get(i));}
 
+                // users after have the chance of tying with previous user; if tied, dont increment their rank
+                // only increment rank once there is a user who is NOT tied with previous user(s)
                 if (i > 0) {
-                    if (scores.get(i) == scores.get(i-1)){
+                    if (scores.get(i) == scores.get(i-1)){ // case for if tied
                         System.out.println(displayScore + ". " + users.get(i) + ": " + scores.get(i));
-                    } else {
+                    } else { // case for if not tied
                         displayScore = i + 1;
                         System.out.println(displayScore + ". " + users.get(i) + ": " + scores.get(i));
                     }
                 }
-                
                 
             } catch (Exception e) {}
             
         }
         System.out.println("\nHit enter to return to the main menu.");
 
-        s.nextLine();
+        s.nextLine(); // wait for user to hit enter
         
     }
 
 
     public static void game(Scanner s) {
 
-        while (playAgain) {
-            winyet = false;
-            numCurrentUser = 1;
-            moveCount = 0;
+        while (playAgain) { // if the user wants to play again; playAgain is initially true
+            winyet = false; // has a win occurred yet this round
+            numCurrentUser = 1; // who is the current user still requiring a name (for assigning names to user1/user2)
+            moveCount = 0; // how many moves have passed this match
             
             refreshBoard();
             
             if (resetUsers){
-                user1 = inputCheck(s, userMode);
+                user1 = inputCheck(s, userMode); // get user1 from inputcheck
 
                 numCurrentUser += 1;
 
-                user2 = inputCheck(s, userMode);
+                user2 = inputCheck(s, userMode); // get user2 from input check
             }
 
-            randomizeFirstPlayer();
+            randomizeFirstPlayer(); // determine which player goes first/is X
             
             while (moveCount < 9 && !winyet){
 
                 clearConsole();
                 printBoard();
 
-                move = Integer.parseInt(inputCheck(s, moveMode));
+                move = Integer.parseInt(inputCheck(s, moveMode)); // get move
 
-                if (moveCount%2 == 0) {
+                if (moveCount%2 == 0) { // if it's x's move, put x in the requested space
                     gameBoard[(move-1)/3][(move-1)%3] = "X";
-                } else {
+                } else { // if it's o's move, put o in the requested space
                     gameBoard[(move-1)/3][(move-1)%3] = "O";
                 }
                 
-                if (moveCount > 3) {checkWin();}
+                if (moveCount > 3) {checkWin();} // only check wins from the 5th move onwards (a win is only possible after x goes 3 times, or 5 rounds [x,o,x,o,x])
 
-                moveCount++;
+                moveCount++; // increment move number
 
             }
 
-            if (!winyet) {
+            if (!winyet) { // if while loop above ends and winyet is still false, declare the game a tie
                 winner = "tie";
             }
 
             clearConsole();
             printBoard();
 
+            // set the winner and increment their score in the scores array or simply declare a tie
             if (winner == "X"){
                 System.out.println(xUser + " (X) Wins!");
                 scoreIncrement(xUser);
@@ -198,21 +219,21 @@ public class Main {
 
             s.nextLine();
 
-            replayCheck(s);
+            replayCheck(s); // ask if they want to play again
 
-            if (playAgain) {resetUsersCheck(s);}
+            if (playAgain) {resetUsersCheck(s);} // if they want to play again, ask if they want to continue as the same users or input new usernames
 
         }
     }
 
     public static void replayCheck(Scanner s) {
-        if (inputCheck(s, replayMode).equals("n")){
+        if (inputCheck(s, replayMode).equals("n")){ // if they say they dont want to play again, make playagain false
             playAgain = false;
         }
     }
 
     public static void resetUsersCheck(Scanner s) {
-        if (inputCheck(s, resetUsersMode).equals("n")){
+        if (inputCheck(s, resetUsersMode).equals("n")){ // if they want to reset users, make it true, if not make it false
             resetUsers = true;
         } else {
             resetUsers = false;
@@ -225,19 +246,19 @@ public class Main {
         if((gameBoard[0][0] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][2]
         || (gameBoard[0][2] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][0]))){
             winyet = true;
-            winner = gameBoard[1][1];
+            winner = gameBoard[1][1]; // winner will always be in the middle square for both diagonal cases
             return;
         }
         
         for (int i = 0; i < 3; i++){
             // column win checking
-            if (gameBoard[0][i] == gameBoard[1][i] && gameBoard[1][i] == gameBoard[2][i]){
+            if (gameBoard[0][i] == gameBoard[1][i] && gameBoard[1][i] == gameBoard[2][i]){ // check the entire column in position 1, 2 and 3
                 winyet = true;
                 winner = gameBoard[0][i];
                 return;
             }
             // row win checking
-            else if (gameBoard[i][0] == gameBoard[i][1] && gameBoard[i][1] == gameBoard[i][2]){
+            else if (gameBoard[i][0] == gameBoard[i][1] && gameBoard[i][1] == gameBoard[i][2]){ // check the entire row in position 1, 2 and 3
                 winyet = true;
                 winner = gameBoard[i][0];
                 return;
@@ -248,6 +269,7 @@ public class Main {
     public static void randomizeFirstPlayer() {
         Random rand = new Random();
 
+        // set x/o users randomly
         if (rand.nextBoolean()) {
             xUser = user1;
             oUser = user2;
@@ -259,23 +281,22 @@ public class Main {
     }
 
     public static void scoreIncrement(String user){
+        // temporary variables for swapping in arraylist
         int tempScore;
         String tempUser;
         
+        // index of user to increment
         int index = users.indexOf(user);
     
-
-
+        //remove from list and add to end of list
         tempScore = scores.get(index);
         tempUser = users.get(index);
-
         scores.remove(index);
         users.remove(index);
-
-        scores.add(tempScore + 1);
+        scores.add(tempScore + 1); // add to end to allow for sorting to work
         users.add(tempUser);
 
-        sortFile();
+        sortFile(); //sort
     }
 
     public static void printBoard() {
