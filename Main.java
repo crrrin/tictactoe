@@ -35,6 +35,8 @@ public class Main {
     public static String userMode = "userMode";
     public static String menuMode = "menuMode";
     public static String moveMode = "moveMode";
+    public static String replayMode = "replayMode";
+    public static String resetUsersMode = "resetUsersMode";
     
     public static boolean winyet = false;
     
@@ -53,8 +55,7 @@ public class Main {
         while (playAgain) {
             menu(s);
         }
-        
-        String silksong = inputCheck(s, userMode);
+    
         s.close();
         
     }
@@ -97,18 +98,18 @@ public class Main {
                 user2 = inputCheck(s, userMode);
             }
 
-            printBoard();
-
             randomizeFirstPlayer();
             
             while (moveCount < 9 && !winyet){
-                if ((moveCount % 2) ==)
-                System.out.print("It's " + xUser + "'s (X) turn! Choose an available space from 1-9: ");
+
+                clearConsole();
+                printBoard();
+
                 // TODO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3 :3
 
                 move = Integer.parseInt(inputCheck(s, moveMode));
 
-                if (moveCount%2 == 1) {
+                if (moveCount%2 == 0) {
                     gameBoard[(move-1)/3][(move-1)%3] = "X";
                 } else {
                     gameBoard[(move-1)/3][(move-1)%3] = "O";
@@ -124,32 +125,48 @@ public class Main {
                 winner = "tie";
             }
 
+            clearConsole();
+            printBoard();
+
             if (winner == "X"){
-                System.out.println(xUser + "(X) Wins!");
+                System.out.println(xUser + " (X) Wins!");
                 scoreIncrement(xUser);
             } else if (winner == "O") {
-                System.out.println(oUser + "(O) Wins!");
+                System.out.println(oUser + " (O) Wins!");
                 scoreIncrement(oUser);
             } else {
                 System.out.println("Tie game!");
             }
 
-            sortFile();
+            s.nextLine();
 
+            replayCheck(s);
 
+            if (playAgain) {resetUsersCheck(s);}
 
+        }
+    }
+
+    public static void replayCheck(Scanner s) {
+        if (inputCheck(s, replayMode).equals("n")){
+            playAgain = false;
+        }
+    }
+
+    public static void resetUsersCheck(Scanner s) {
+        if (inputCheck(s, resetUsersMode).equals("n")){
+            resetUsers = true;
         }
     }
 
     public static void checkWin(){
         
         // diagonal win checking
-        for (int diagonal = 0; diagonal < 3; diagonal++){
-            if (gameBoard[diagonal][diagonal] == gameBoard[diagonal][diagonal] && gameBoard[diagonal][diagonal] == gameBoard[diagonal][diagonal]){
-                winyet = true;
-                winner = gameBoard[diagonal][diagonal];
-                return;
-            }
+        if((gameBoard[0][0] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][2]
+        || (gameBoard[0][2] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][0]))){
+            winyet = true;
+            winner = gameBoard[0][0];
+            return;
         }
         
         // column win checking
@@ -185,8 +202,23 @@ public class Main {
     }
 
     public static void scoreIncrement(String user){
-    scores.set(users.indexOf(user), (scores.get(users.indexOf(user)) + 1));
-    sortFile();
+        int tempScore;
+        String tempUser;
+        
+        int index = users.indexOf(user);
+    
+
+
+        tempScore = scores.get(index);
+        tempUser = users.get(index);
+
+        scores.remove(index);
+        users.remove(index);
+
+        scores.add(tempScore + 1);
+        users.add(index, tempUser);
+
+        sortFile();
     }
 
     public static void printBoard() {
@@ -324,9 +356,14 @@ public class Main {
             int choice = -1;
 
             while (!(choice >= 1 && choice <= 9))
-
             {
                 try {
+                    if ((moveCount % 2) == 0){
+                        System.out.print("It's " + xUser + "'s (X) turn! Choose an available space from 1-9: ");
+                    } else {
+                        System.out.print("It's " + oUser + "'s (O) turn! Choose an available space from 1-9: ");
+                    }
+                    
                     choice = s.nextInt();
                     if (!(choice >= 1 && choice <= 9)
                         || gameBoard[(choice-1)/3][(choice-1)%3] == "X"
@@ -336,17 +373,41 @@ public class Main {
                 
                         return Integer.toString(choice);
 
-                    } catch (Exception e) {
-                        choice = -1;
-                        s.nextLine();
-                        clearConsole();
-                        printBoard();
+                } catch (Exception e) {
+                    choice = -1;
+                    s.nextLine();
+                    clearConsole();
+                    printBoard();
 
-                    }
+                }
             }
         }
         
-        return inputtedValue;
+        if (mode.equals(replayMode)){
+            String choice = "";
+
+            while (!((choice.toLowerCase()).equals("y") || (choice.toLowerCase()).equals("n"))) {
+
+                System.out.print("Would you like to play again? Input y/n: ");
+                choice = s.nextLine();
+                }
+
+                return choice;
+        }
+
+        if (mode.equals(resetUsersMode)){
+            String choice = "";
+
+            while (!((choice.toLowerCase()).equals("y") || (choice.toLowerCase()).equals("n"))) {
+
+                System.out.print("Would you like to continue playing with the same usernames? Input y/n: ");
+                choice = s.nextLine();
+                }
+
+                return choice;
+        }
+
+        return "How did you get here";
         
     }
 
