@@ -41,23 +41,31 @@ public class Main {
     public static boolean winyet = false;
     
     public static boolean playAgain = true;
-
+    
     public static String gameBoard[][] = {
         {"1", "2", "3"},
         {"4", "5", "6"},
         {"7", "8", "9"}
     }; 
-
+    
     public static void main(String[] args) {
         
         Scanner s = new Scanner(System.in);
         
+        ArrayWriteFromFile();
+        
         while (playAgain) {
             menu(s);
         }
-    
+        
         s.close();
         
+    }
+    
+    public static void refreshBoard(){
+        for (int i = 1; i <= 9; i++){
+            gameBoard[(i-1)/3][(i-1)%3] = Integer.toString(i);
+        }
     }
     
     public static void menu(Scanner s) { 
@@ -80,16 +88,61 @@ public class Main {
 
     public static void leaderboard(Scanner s) {
 
+        int displayScore = 1;
+
+        clearConsole();
+
+        System.out.println(
+            "\n" + //
+            "\n" + //
+            "  _      ______          _____  ______ _____  ____   ____          _____  _____  \n" + //
+            " | |    |  ____|   /\\   |  __ \\|  ____|  __ \\|  _ \\ / __ \\   /\\   |  __ \\|  __ \\ \n" + //
+            " | |    | |__     /  \\  | |  | | |__  | |__) | |_) | |  | | /  \\  | |__) | |  | |\n" + //
+            " | |    |  __|   / /\\ \\ | |  | |  __| |  _  /|  _ <| |  | |/ /\\ \\ |  _  /| |  | |\n" + //
+            " | |____| |____ / ____ \\| |__| | |____| | \\ \\| |_) | |__| / ____ \\| | \\ \\| |__| |\n" + //
+            " |______|______/_/    \\_\\_____/|______|_|  \\_\\____/ \\____/_/    \\_\\_|  \\_\\_____/ \n");
+
+        if (scores.size() == 0) {
+            System.out.println("No highscores have been logged- Play a round to see your highscore listed here!");
+            s.nextLine();
+            return;
+        }
+
+
+
+        for (int i = 0; i < scores.size() && i < 10; i++){
+
+            try {
+
+                if (i == 0) {System.out.println(displayScore + ". " + users.get(i) + ": " + scores.get(i));}
+
+                if (i > 0) {
+                    if (scores.get(i) == scores.get(i-1)){
+                        System.out.println(displayScore + ". " + users.get(i) + ": " + scores.get(i));
+                    } else {
+                        displayScore = i + 1;
+                        System.out.println(displayScore + ". " + users.get(i) + ": " + scores.get(i));
+                    }
+                }
+                
+                
+            } catch (Exception e) {}
+            
+        }
         
-
-
+        s.nextLine();
+        
     }
+
 
     public static void game(Scanner s) {
 
         while (playAgain) {
             winyet = false;
             numCurrentUser = 1;
+            moveCount = 0;
+            
+            refreshBoard();
             
             if (resetUsers){
                 user1 = inputCheck(s, userMode);
@@ -154,6 +207,8 @@ public class Main {
 
     public static void resetUsersCheck(Scanner s) {
         if (inputCheck(s, resetUsersMode).equals("n")){
+            resetUsers = true;
+        } else {
             resetUsers = false;
         }
     }
@@ -164,24 +219,24 @@ public class Main {
         if((gameBoard[0][0] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][2]
         || (gameBoard[0][2] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][0]))){
             winyet = true;
-            winner = gameBoard[0][0];
+            winner = gameBoard[1][1];
             return;
         }
         
         // column win checking
-        for (int row = 0; row < 3; row++){
-            if (gameBoard[0][row] == gameBoard[1][row] && gameBoard[1][row] == gameBoard[2][row]){
+        for (int column = 0; column < 3; column++){
+            if (gameBoard[0][column] == gameBoard[1][column] && gameBoard[1][column] == gameBoard[2][column]){
                 winyet = true;
-                winner = gameBoard[0][row];
+                winner = gameBoard[0][column];
                 return;
             }
         }
 
         // row win checking
-        for (int column = 0; column < 3; column++){
-            if (gameBoard[column][0] == gameBoard[column][1] && gameBoard[column][1] == gameBoard[column][2]){
+        for (int row = 0; row < 3; row++){
+            if (gameBoard[row][0] == gameBoard[row][1] && gameBoard[row][1] == gameBoard[row][2]){
                 winyet = true;
-                winner = gameBoard[column][0];
+                winner = gameBoard[row][0];
                 return;
             }
         }       
@@ -246,6 +301,47 @@ public class Main {
     }
 
 
+    public static void ArrayWriteFromFile(){
+        Scanner fileScanner = null;
+        PrintWriter fileWriter = null;
+
+        try {
+            fileScanner = new Scanner(new BufferedReader(new FileReader(userList)));
+            fileWriter = new PrintWriter(new FileWriter(userList, true));
+
+            String userName = "";
+            int wins = 0;
+
+
+            emptyUserFile = !(fileScanner.hasNext());
+
+            
+            while ((fileScanner.hasNext()) && firstRun) {
+                wins = fileScanner.nextInt();
+                   
+                userName = (fileScanner.nextLine()).strip();
+                
+                users.add(userName);
+                scores.add(wins);
+                
+            } 
+
+        } catch (Exception e) {
+        } finally {
+            firstRun = false;
+
+            if (fileScanner != null){
+                fileScanner.close();
+            }
+            if (fileWriter != null) {
+                fileWriter.close();
+            }
+            
+        }
+
+    }
+
+
     public static String inputCheck(Scanner s, String mode) {
         Scanner fileScanner = null;
         PrintWriter fileWriter = null;
@@ -255,7 +351,6 @@ public class Main {
         
         // for if the function is called to get player names...
         if (mode.equals(userMode)) {
-            
             
             while ((inputtedValue.strip()).equals("")) {
                 System.out.print("Choose a username for Player " + numCurrentUser + ": ");
@@ -268,77 +363,54 @@ public class Main {
             inputtedValue = s.nextLine();
 
             }
-
-            String userName = "";
-            int wins = 0;
-            nameAlreadyExists = false;
-
-            try {
-                fileScanner = new Scanner(new BufferedReader(new FileReader(userList)));
-                fileWriter = new PrintWriter(new FileWriter(userList, true));
-
-                emptyUserFile = !(fileScanner.hasNext());
-
+            
+            nameAlreadyExists = users.contains(inputtedValue);
+            
+            if (!nameAlreadyExists){
                 
-                while ((fileScanner.hasNext()) && firstRun) {
-                    wins = fileScanner.nextInt();
-                       
-                    userName = (fileScanner.nextLine()).strip();
-                    
-                    users.add(userName);
-                    scores.add(wins);
-                    
-                    // userScores.add(wins + " " + name);
-                    
-                } 
+                // if (!nameAlreadyExists) {
+                    users.add(inputtedValue);
+                    scores.add(0);
+                // }
 
-                nameAlreadyExists = users.contains(inputtedValue);
-                
-                if (!nameAlreadyExists){
-                    
-                    // if (!nameAlreadyExists) {
-                        users.add(inputtedValue);
-                        scores.add(0);
-                    // }
+                try {
+                    fileScanner = new Scanner(new BufferedReader(new FileReader(userList)));
+                    fileWriter = new PrintWriter(new FileWriter(userList, true));
 
                     if (emptyUserFile) {
                         fileWriter.print("0 " + inputtedValue);
                     } else {
                         fileWriter.print("\n" + "0 " + inputtedValue);
                     }
+                } catch (Exception e) {} finally {
+                    if (fileScanner != null){
+                        fileScanner.close();
+                    }
+                    if (fileWriter != null) {
+                        fileWriter.close();
+                    }
                 }
-
-            } catch (Exception e) {
-            } finally {
-                firstRun = false;
-
-                if (fileScanner != null){
-                    fileScanner.close();
-                }
-                if (fileWriter != null) {
-                    fileWriter.close();
-                    
-                    // sortFile();
-                }
-                
             }
+
+
+            ArrayWriteFromFile();
             
             return inputtedValue;
         }
 
         if (mode.equals(menuMode)) {
 
-            int choice = -1;
+            String choice = "";
 
-            while (!(choice >= 1 && choice <= 3)) {
+            while (!(choice.equals("1") || choice.equals("2") || choice.equals("3"))) {
                 
                 try {
                     System.out.print("Input a number from 1-3: ");
-                    choice = s.nextInt();
-                    s.nextLine();
-                    if (!(choice >= 1 && choice <= 3)) throw new Exception("💩");
+                    choice = s.nextLine();
+                    if (!(Integer.parseInt(choice) >= 1 && Integer.parseInt(choice) <= 3)) throw new Exception("💩");
                 } catch (Exception e) {
-                    choice = -1;
+                    System.out.println(e);
+                    choice = "";
                     // s.nextLine();
                     clearConsole();
                     System.out.println("~ Main Menu ~\n1. Play\n2. How To Play\n3. Leaderboard");
@@ -346,7 +418,7 @@ public class Main {
                 }
             }
 
-            return Integer.toString(choice);
+            return choice;
 
         }
 
@@ -447,9 +519,9 @@ public class Main {
         }
 
 
-    public final static void clearConsole()
+    public static void clearConsole()
     {
-    System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 }
 
