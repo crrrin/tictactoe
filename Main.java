@@ -47,7 +47,7 @@ public class Main {
     public static String replayMode = "replayMode";
     public static String resetUsersMode = "resetUsersMode";
     
-    public static boolean winyet = false; // if a win has occurred in current round yet
+    public static boolean winYet = false; // if a win has occurred in current round yet
     
     public static boolean playAgain = true; // whether the user wants to play again
     
@@ -160,7 +160,7 @@ public class Main {
     public static void game(Scanner s) {
 
         while (playAgain) { // if the user wants to play again; playAgain is initially true
-            winyet = false; // has a win occurred yet this round
+            winYet = false; // has a win occurred yet this round
             numCurrentUser = 1; // who is the current user still requiring a name (for assigning names to user1/user2)
             moveCount = 0; // how many moves have passed this match
             
@@ -176,7 +176,7 @@ public class Main {
 
             randomizeFirstPlayer(); // determine which player goes first/is X
             
-            while (moveCount < 9 && !winyet){
+            while (moveCount < 9 && !winYet){
 
                 clearConsole();
                 printBoard();
@@ -195,7 +195,7 @@ public class Main {
 
             }
 
-            if (!winyet) { // if while loop above ends and winyet is still false, declare the game a tie
+            if (!winYet) { // if while loop above ends and winyet is still false, declare the game a tie
                 winner = "tie";
             }
 
@@ -241,7 +241,7 @@ public class Main {
         // diagonal win checking
         if((gameBoard[0][0] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][2]
         || (gameBoard[0][2] == gameBoard[1][1] && gameBoard[1][1] == gameBoard[2][0]))){
-            winyet = true;
+            winYet = true;
             winner = gameBoard[1][1]; // winner will always be in the middle square for both diagonal cases
             return;
         }
@@ -249,13 +249,13 @@ public class Main {
         for (int i = 0; i < 3; i++){
             // column win checking
             if (gameBoard[0][i] == gameBoard[1][i] && gameBoard[1][i] == gameBoard[2][i]){ // check the entire column in position 1, 2 and 3
-                winyet = true;
+                winYet = true;
                 winner = gameBoard[0][i];
                 return;
             }
             // row win checking
             else if (gameBoard[i][0] == gameBoard[i][1] && gameBoard[i][1] == gameBoard[i][2]){ // check the entire row in position 1, 2 and 3
-                winyet = true;
+                winYet = true;
                 winner = gameBoard[i][0];
                 return;
             }
