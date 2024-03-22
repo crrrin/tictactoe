@@ -22,9 +22,8 @@ public class Main {
     public static ArrayList<String> users = new ArrayList<String>(); 
     public static ArrayList<Integer> scores = new ArrayList<Integer>();
 
-    // 
-    public static boolean emptyUserFile = false;
-    public static boolean nameAlreadyExists = false;
+    public static boolean emptyUserFile = false; // for knowing whether to start with newline char or not when writing to file
+    public static boolean nameAlreadyExists = false; // for checking whether or not to add name to array
     
     public static int numCurrentUser = 1; //determines current user for assigning names
     
@@ -296,9 +295,10 @@ public class Main {
         scores.add(tempScore + 1); // add to end to allow for sorting to work
         users.add(tempUser);
 
-        sortFile(); //sort
+        sortFile(); //sort the file
     }
 
+    // print the board status inside of a board design
     public static void printBoard() {
         System.out.println(
             "+-~-+-~-+-~-+\n" +
@@ -330,21 +330,24 @@ public class Main {
         PrintWriter fileWriter = null;
 
         try {
+            // create scanner and printwriter objects
             fileScanner = new Scanner(new BufferedReader(new FileReader(userList)));
             fileWriter = new PrintWriter(new FileWriter(userList, true));
 
+            // create user/score variables
             String userName = "";
             int wins = 0;
 
 
-            emptyUserFile = !(fileScanner.hasNext());
+            emptyUserFile = !(fileScanner.hasNext()); // if file is empty
 
             
-            while ((fileScanner.hasNext()) && firstRun) {
-                wins = fileScanner.nextInt();
-                   
-                userName = (fileScanner.nextLine()).strip();
+            while ((fileScanner.hasNext()) && firstRun) { // only run the first time (firstrun becomes false shortly after)
                 
+                wins = fileScanner.nextInt(); // read number of wins   
+                userName = (fileScanner.nextLine()).strip(); // read name and strip and leading/trailing spaces
+                
+                // add to parallel arraylists
                 users.add(userName);
                 scores.add(wins);
                 
@@ -352,8 +355,10 @@ public class Main {
 
         } catch (Exception e) {
         } finally {
-            firstRun = false;
 
+            firstRun = false; // make firstrun false
+
+            // and close scanner + printwriter
             if (fileScanner != null){
                 fileScanner.close();
             }
@@ -365,32 +370,30 @@ public class Main {
 
     }
 
-
     public static String inputCheck(Scanner s, String mode) {
         Scanner fileScanner = null;
         PrintWriter fileWriter = null;
 
         // create an empty string to contain the return string value
-        String inputtedValue = ""; // String exists to let mode variable be defined dynamically
+        String inputtedValue = "";
         
         // for if the function is called to get player names...
         if (mode.equals(userMode)) {
             
             while ((inputtedValue.strip()).equals("")) {
                 System.out.print("Choose a username for Player " + numCurrentUser + ": ");
+                inputtedValue = s.nextLine(); // get username
+            }
+
+            // if player 2 inputs the same name as player 1 refuse and ask for another name
+            while ((numCurrentUser == 2) && (inputtedValue.strip()).equals(user1.strip())) {
+                System.out.print("User taken by Player 1! Choose a different username for Player " + numCurrentUser + ": ");
                 inputtedValue = s.nextLine();
             }
-
-            while ((numCurrentUser == 2) && (inputtedValue.strip()).equals(user1.strip())) {
-
-            System.out.print("User taken by Player 1! Choose a different username for Player " + numCurrentUser + ": ");
-            inputtedValue = s.nextLine();
-
-            }
             
-            nameAlreadyExists = users.contains(inputtedValue.strip());
+            nameAlreadyExists = users.contains(inputtedValue.strip()); // check if the name previously existed in the file
             
-            if (!nameAlreadyExists){
+            if (!nameAlreadyExists){ // if it didnt previously exist in the file, add it to the arraylists, if not it will already be in there
                 
                 // if (!nameAlreadyExists) {
                     users.add(inputtedValue);
@@ -401,12 +404,14 @@ public class Main {
                     fileScanner = new Scanner(new BufferedReader(new FileReader(userList)));
                     fileWriter = new PrintWriter(new FileWriter(userList, true));
 
-                    if (emptyUserFile) {
+                    // append new names to the file with a score of 0
+                    if (emptyUserFile) { // if it's the first line in the file, we dont need to start with a newline character.
                         fileWriter.print("0 " + inputtedValue);
                     } else {
-                        fileWriter.print("\n" + "0 " + inputtedValue);
+                        fileWriter.print("\n" + "0 " + inputtedValue); // if its not the firstline, put a newline in first
                     }
                 } catch (Exception e) {} finally {
+                    // close scanner/printwriter
                     if (fileScanner != null){
                         fileScanner.close();
                     }
@@ -417,57 +422,57 @@ public class Main {
             }
 
 
-            ArrayWriteFromFile();
+            ArrayWriteFromFile(); // write to file from arrays now that new users are added
             
-            return inputtedValue;
+            return inputtedValue; // return the name that was inputted
         }
 
-        if (mode.equals(menuMode)) {
+        if (mode.equals(menuMode)) { // ensure that input is only 1, 2, or 3 for mainmenu
 
             String choice = "";
 
+            // keep looping until valid input
             while (!(choice.equals("1") || choice.equals("2") || choice.equals("3"))) {
                 
                 try {
                     System.out.print("Input a number from 1-3: ");
                     choice = s.nextLine();
-                    if (!(Integer.parseInt(choice) >= 1 && Integer.parseInt(choice) <= 3)) throw new Exception("💩");
+                    if (!(Integer.parseInt(choice) >= 1 && Integer.parseInt(choice) <= 3)) throw new Exception("choice was not in range 1-3");
                 } catch (Exception e) {
-                    System.out.println(e);
                     choice = "";
-                    // s.nextLine();
                     clearConsole();
                     System.out.println("~ Main Menu ~\n1. Play\n2. How To Play\n3. Leaderboard");
 
                 }
             }
-
             return choice;
-
         }
 
-        if (mode.equals(moveMode)){
+        if (mode.equals(moveMode)){ // for taking moves when the game has begun
 
-            int choice = -1;
+            int choice = -1; // default value
 
-            while (!(choice >= 1 && choice <= 9))
+            while (!(choice >= 1 && choice <= 9)) // until input is valid
             {
                 try {
-                    if ((moveCount % 2) == 0){
+                    if ((moveCount % 2) == 0){ // X's turn if movecount is even (starts at 0)
                         System.out.print("It's " + xUser + "'s (X) turn! Choose an available space from 1-9: ");
-                    } else {
+                    } else { // O's turn if odd
                         System.out.print("It's " + oUser + "'s (O) turn! Choose an available space from 1-9: ");
                     }
                     
-                    choice = s.nextInt();
+                    choice = s.nextInt(); // take input
+
+                    // ensure that the input is valid AND that the move doesn't overwrite any previous moves
                     if (!(choice >= 1 && choice <= 9)
                         || gameBoard[(choice-1)/3][(choice-1)%3] == "X"
                         || gameBoard[(choice-1)/3][(choice-1)%3] == "O") 
                             throw new Exception("choice was not in range 1-9");
                 
-                        return Integer.toString(choice);
+                        return Integer.toString(choice); // return the choice
 
                 } catch (Exception e) {
+                    // if input is invalid, reset and keep asking
                     choice = -1;
                     s.nextLine();
                     clearConsole();
@@ -477,9 +482,10 @@ public class Main {
             }
         }
         
-        if (mode.equals(replayMode)){
+        if (mode.equals(replayMode)){ // check if the user wants to play again
             String choice = "";
 
+            // only take input y/n
             while (!((choice.toLowerCase()).equals("y") || (choice.toLowerCase()).equals("n"))) {
 
                 System.out.print("Would you like to play again? Input y/n: ");
@@ -489,9 +495,10 @@ public class Main {
                 return choice;
         }
 
-        if (mode.equals(resetUsersMode)){
+        if (mode.equals(resetUsersMode)){ // check if the user wants to continue with existing usernames or not
             String choice = "";
 
+            // only take input y/n
             while (!((choice.toLowerCase()).equals("y") || (choice.toLowerCase()).equals("n"))) {
 
                 System.out.print("Would you like to continue playing with the same usernames? Input y/n: ");
@@ -505,13 +512,16 @@ public class Main {
         
     }
 
+    // sort the file by sorting the arraylist and printing to the file
     public static void sortFile(){
         PrintWriter fileWriter = null;
         String sortedUserScores = "";
         String tempUser;
         int tempScore;
 
+        // go from the bottom of the arraylist and compare it with the value in front of it
         for (int i = (scores.size() - 1); i > 0 && scores.get(i) > scores.get(i-1); i--) {
+            // if its greater, swap the values in both user and score arraylists
                 tempScore = scores.get(i-1);
                 scores.set(i-1, scores.get(i));
                 scores.set(i, tempScore);
@@ -520,7 +530,8 @@ public class Main {
                 users.set(i-1, users.get(i));
                 users.set(i, tempUser);
         }
-     
+
+        // put everything to be written to the file in a string
         for (int i = 0; i < scores.size(); i++){    
             sortedUserScores += (scores.get(i) + " " + users.get(i));
             if (i < (scores.size() - 1)) {
@@ -528,6 +539,7 @@ public class Main {
             }
         }
 
+        // put above string into the file, overwrite existing file as it is already in the arraylist at this point
         try {
             fileWriter = new PrintWriter(new FileWriter(userList, false));
 
@@ -535,6 +547,7 @@ public class Main {
 
         } catch (Exception e) {
         } finally {
+            // close the printwriter
             if (fileWriter != null) {
                 fileWriter.close();
             }
@@ -543,9 +556,9 @@ public class Main {
         }
 
 
+    // "clear" the console by printing a bunch of newlines :P
     public static void clearConsole()
     {
     System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 }
-
