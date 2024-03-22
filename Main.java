@@ -15,7 +15,6 @@ public class Main {
     
     public static boolean firstRun = true; //bool to ensure arraylists for user/score are only pulled from file once
     
-    
     public static String userList = "users.txt"; // file of scores/names
     
     // parallel arraylists of users/scores 
@@ -72,7 +71,6 @@ public class Main {
         s.close(); // close scanner
     }
     
-
     // clear board (for after game)
     public static void refreshBoard(){
 
@@ -112,7 +110,7 @@ public class Main {
 
         clearConsole();
 
-        System.out.println( // do you like my ascii art, i stole it https://patorjk.com/software/taag/
+        System.out.println( // ascii art generated using https://patorjk.com/software/taag/
             "\n" + //
             "\n" + //
             "  _      ______          _____  ______ _____  ____   ____          _____  _____  \n" + //
@@ -129,8 +127,6 @@ public class Main {
             s.nextLine();
             return;
         }
-
-
 
         for (int i = 0; i < scores.size() && i < 10; i++){ // go through array until reach 10 users or end of array
 
@@ -158,7 +154,6 @@ public class Main {
         s.nextLine(); // wait for user to hit enter
         
     }
-
 
     public static void game(Scanner s) {
 
@@ -268,7 +263,7 @@ public class Main {
     public static void randomizeFirstPlayer() {
         Random rand = new Random();
 
-        // set x/o users randomly
+        // set x/o users randomly per round
         if (rand.nextBoolean()) {
             xUser = user1;
             oUser = user2;
