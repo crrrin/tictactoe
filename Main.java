@@ -67,6 +67,8 @@ public class Main {
         while (playAgain) { // main game loop- stop if they dont want to play again
             menu(s);
         }
+
+        System.out.println("Thanks for playing! :D");
         
         s.close(); // close scanner
     }
