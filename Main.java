@@ -84,7 +84,7 @@ public class Main {
         }
     }
     
-    //
+    // mainmenu function, is looped from main if playagain is true
     public static void menu(Scanner s) { 
         
         clearConsole();
@@ -365,9 +365,7 @@ public class Main {
             if (fileWriter != null) {
                 fileWriter.close();
             }
-            
         }
-
     }
 
     public static String inputCheck(Scanner s, String mode) {
@@ -395,10 +393,8 @@ public class Main {
             
             if (!nameAlreadyExists){ // if it didnt previously exist in the file, add it to the arraylists, if not it will already be in there
                 
-                // if (!nameAlreadyExists) {
                     users.add(inputtedValue);
                     scores.add(0);
-                // }
 
                 try {
                     fileScanner = new Scanner(new BufferedReader(new FileReader(userList)));
@@ -421,9 +417,8 @@ public class Main {
                 }
             }
 
-
             ArrayWriteFromFile(); // write to file from arrays now that new users are added
-            
+
             return inputtedValue; // return the name that was inputted
         }
 
@@ -552,9 +547,7 @@ public class Main {
                 fileWriter.close();
             }
         }
-
-        }
-
+    }
 
     // "clear" the console by printing a bunch of newlines :P
     public static void clearConsole()
