@@ -68,7 +68,7 @@ public class Main {
             menu(s);
         }
 
-        System.out.println("Thanks for playing! :D");
+        System.out.print("Thanks for playing! :D");
         
         s.close(); // close scanner
     }
